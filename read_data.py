@@ -16,7 +16,16 @@ def get_person_list(person_data):
         list_of_names.append(eintrag["lastname"] + ", " +  eintrag["firstname"])
     return list_of_names
 
+def find_person_data_by_name(person_data, name):
+    """A Function that takes the persons-dictionary and a name and returns the data of the person with this name"""
+    for eintrag in person_data:
+        if eintrag["lastname"] + ", " +  eintrag["firstname"] == name:
+            return eintrag
+    return None
+
 if __name__ == "__main__":
-    person_data = load_person_data()
-    list_of_names = get_person_list(person_data)
-    print(list_of_names)
+    #person_data = load_person_data()
+    #list_of_names = get_person_list(person_data)
+    #print(list_of_names)
+    a = find_person_data_by_name(load_person_data(), "Heyer, Yannic")
+    print(a)
