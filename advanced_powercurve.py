@@ -3,18 +3,27 @@ import pandas as pd
 import plotly.express as px
 
 def read_data(filepath):
+    '''Funktion, die eine CSV-Datei im angebegenen Dateipfad auslesen kann und ein Pandas Dataframe der Daten zurückgibt'''
     df = pd.read_csv(filepath)
     return df
 
 def add_time(df):
+    '''Funktion, die eine Zeitachse hinzufügt über die Länge des Dataframes. Hier: eine Zeile (== ein Index) pro Sekunde'''
     df["time_seconds"] = np.arange(len(df))
     return df
 
 def find_best_effort(df, window_size, resolution=1):
+    '''Funktion, die den Dataframe in einem beliebig großen Intervall (rolling window) durchgeht,
+    für jedes einzelne Window den Mittelwert bestimmt und den größten Wert dieser Mittelwerte für die gewählte Intervallgröße zurückgibt.
+    Die "resolution" bietet die Möglichkeit, Daten zu verarbeiten, die mehr oder weniger als einen Datensatz pro Sekunde erfassen. 
+    Da im getesteten "activity.csv" neue Daten einmal pro Sekunde erhoben wurden, ist die "resolution" standardmäßig auf 1 gesetzt.'''
     df2 = df["PowerOriginal"].rolling(window_size*resolution).mean()
     return df2.max()
 
 def create_pc_df(df, window_list):
+    '''Diese Funktion erstellt einen neuen Dataframe mit den Spalten "Intervalls" und "Max. avg. Power" um daraus die Leistungskurve zu plotten.
+    In dieser Funktion wird die Funktion find_best_effort in einer for-Schleife aufgerufen, 
+    die für die gewählten Windows eine Liste mit der max. Leistung im jeweiligen Window erstellt.'''
     list_a = []
     for window_size in window_list:
         list_a.append(find_best_effort(df, window_size))
@@ -24,11 +33,14 @@ def create_pc_df(df, window_list):
 
 
 def plot_pc(pc_df):
+    '''Funktion, um den in create_pc_df erstellten Dataframe zu plotten'''
     fig = px.line(pc_df, x= pc_df["Intervall"], y= pc_df["Max. Avg. Power"])
     return fig
 
 
 def create_windows(df):
+    '''Funktion, die eine Liste (window_list) mit Fenstergrößen(window_sizes) von 1 bis über die ganze Länge des mod. Dataframes 
+    - also alle möglichen Windows - erstellt.'''
     window_list = np.arange(len(df))
     return window_list
 
@@ -44,7 +56,8 @@ if __name__ == "__main__":
     #print(pcdf2.head())
     fig1 = plot_pc(pcdf2)
     fig1.update_layout(
-    xaxis_title="Intervalls",
+    xaxis_title="Intervalls in s",
     yaxis_title="Max. avg. Power in W"
     )
     fig1.show()
+    #fig1.write_image("/data/activities/advanced_power_curve.png")
