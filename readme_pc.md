@@ -25,6 +25,7 @@ Der hier beschriebene Code befindet sich in *advanced_powercurve.py*
     - Funktion, um den in create_pc_df erstellten Dataframe zu plotten
     - Eingabe: Powercurve Dataframe
     - Ausgabe: fig (Plot)     
+    
 -----
 #### Extras
 - create_windows:

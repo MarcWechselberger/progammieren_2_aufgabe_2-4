@@ -31,12 +31,10 @@ def create_pc_df(df, window_list):
     pc_df["Intervall"] = window_list
     return pc_df
 
-
 def plot_pc(pc_df):
     '''Funktion, um den in create_pc_df erstellten Dataframe zu plotten'''
     fig = px.line(pc_df, x= pc_df["Intervall"], y= pc_df["Max. Avg. Power"])
     return fig
-
 
 def create_windows(df):
     '''Funktion, die eine Liste (window_list) mit Fenstergrößen(window_sizes) von 1 bis über die ganze Länge des mod. Dataframes 
